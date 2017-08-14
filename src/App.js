@@ -6,8 +6,9 @@ import MyReads from './MyReads'
 import SearchBooks from './SearchBooks'
 
 class BooksApp extends React.Component {
+    
     state = {
-        books: []
+        books: [],
     }
 
     componentDidMount() {
@@ -15,17 +16,28 @@ class BooksApp extends React.Component {
             this.setState({books})
         })
     }
+    
+    updateBook = (book, shelf) => {
+        this.setState(state => ({
+            book: state.books.filter(b => b.id === book.id).map(b => b.shelf = shelf)
+        }))
+        
+        BooksAPI.update(book, shelf)
+    }
 
     render() {
     return (
         <div className="app">
             <Route exact path="/" render={() => (    
                     <MyReads
+                        onUpdateBook={this.updateBook}
                         books={this.state.books}
                     />
             )}/>
             <Route path="/search" render={() => (
-                    <SearchBooks/>
+                    <SearchBooks
+                        onUpdateBook={this.updateBook}
+                    />
             )}/>
         </div>
         )
