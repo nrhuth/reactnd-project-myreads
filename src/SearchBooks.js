@@ -6,6 +6,7 @@ import PropTypes from 'prop-types'
 class SearchBooks extends Component {
     static propTypes = {
         onUpdateBook : PropTypes.func,
+        books : PropTypes.array.isRequired,
     }
     
     state = {
@@ -21,8 +22,9 @@ class SearchBooks extends Component {
     }
     
     render() {
-        const { onUpdateBook } = this.props
-        
+        const { books, onUpdateBook } = this.props
+
+        let selectValue
         return (
             <div className="search-books">
             <div className="search-books-bar">
@@ -50,9 +52,11 @@ class SearchBooks extends Component {
                   <li key={result.id}>
                     <div className="book">
                       <div className="book-top">
-                        <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${result.imageLinks.thumbnail})` }}></div>
+                        <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${result.imageLinks.smallThumbnail})` }}></div>
                         <div className="book-shelf-changer">
-                          <select value='' onChange={(event) => onUpdateBook(result, event.target.value)}>
+                          <select value={books.filter(book => ( book.id === result.id)).map(book => book.shelf).join()}
+                                onChange={(event) => onUpdateBook(result, event.target.value)}
+                          >
                             <option value="none" disabled>Move to...</option>
                             <option value="currentlyReading">Currently Reading</option>
                             <option value="wantToRead">Want to Read</option>
